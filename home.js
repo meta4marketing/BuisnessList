@@ -1,14 +1,13 @@
 /* =====================================================
    PART 8 — HOME PAGE PRODUCT LISTING
 ===================================================== */
-
+let allHomeProducts = [];
 import { db } from "./firebase-config.js";
 
 import {
     collection,
     getDocs
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
-
 
 /* =====================================================
    ELEMENTS
@@ -31,6 +30,8 @@ const productsEmpty =
         "homeProductsEmpty"
     );
 
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
 
 /* =====================================================
    PRODUCT DETAILS MODAL
@@ -59,7 +60,7 @@ if (detailsModalElement) {
    LOAD PRODUCTS
 ===================================================== */
 
-async function loadHomeProducts() {
+async function loadHomeProducts(const products = [];) {
 
     if (!productsContainer) {
 
@@ -870,3 +871,167 @@ loadHomeProducts();
 console.log(
     "Part 8 Home Product Listing Loaded"
 );
+allHomeProducts = products;
+/* =====================================================
+   SEARCH PRODUCTS
+===================================================== */
+
+function searchProducts() {
+
+    const keyword =
+        searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+    // Empty search = show all products
+
+    if (!keyword) {
+
+        renderHomeProducts(
+            allHomeProducts
+        );
+
+        return;
+
+    }
+
+
+    const filteredProducts =
+        allHomeProducts.filter(
+            product => {
+
+                const name =
+                    String(
+                        product.name || ""
+                    ).toLowerCase();
+
+
+                const model =
+                    String(
+                        product.modelNumber || ""
+                    ).toLowerCase();
+
+
+                const description =
+                    String(
+                        product.description || ""
+                    ).toLowerCase();
+
+
+                const category =
+                    String(
+                        product.category || ""
+                    ).toLowerCase();
+
+
+                const mobile =
+                    String(
+                        product.ownerMobile || ""
+                    ).toLowerCase();
+
+
+                const business =
+                    String(
+                        product.ownerName || ""
+                    ).toLowerCase();
+
+
+                return (
+
+                    name.includes(keyword) ||
+
+                    model.includes(keyword) ||
+
+                    description.includes(keyword) ||
+
+                    category.includes(keyword) ||
+
+                    mobile.includes(keyword) ||
+
+                    business.includes(keyword)
+
+                );
+
+            }
+        );
+
+
+    if (
+        filteredProducts.length === 0
+    ) {
+
+        productsContainer.innerHTML = `
+
+            <div class="col-12">
+
+                <div class="alert alert-warning text-center">
+
+                    No matching business or product found.
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    renderHomeProducts(
+        filteredProducts
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH BUTTON
+===================================================== */
+
+if (searchBtn) {
+
+    searchBtn.addEventListener(
+        "click",
+        searchProducts
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH WHILE TYPING
+===================================================== */
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        searchProducts
+    );
+
+
+    /* =============================================
+       ENTER KEY
+    ============================================= */
+
+    searchInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                searchProducts();
+
+            }
+
+        }
+    );
+
+}
