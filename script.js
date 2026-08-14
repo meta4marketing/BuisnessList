@@ -1408,3 +1408,27 @@ console.log(
 ===================================================== */
 
 restorePendingRegistration();
+
+const testLoginBtn =
+    document.getElementById("loginBtn");
+
+const testLoginModalElement =
+    document.getElementById("loginModal");
+
+if (testLoginBtn && testLoginModalElement) {
+
+    const testLoginModal =
+        new bootstrap.Modal(testLoginModalElement);
+
+    testLoginBtn.addEventListener(
+        "click",
+        function() {
+
+            console.log("LOGIN BUTTON CLICKED");
+
+            testLoginModal.show();
+
+        }
+    );
+
+}
