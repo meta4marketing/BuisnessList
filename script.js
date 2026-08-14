@@ -1,3 +1,15 @@
+import {
+    auth,
+    db,
+    storage
+} from "./firebase-config.js";
+
+console.log("Firebase connected successfully");
+
+console.log("Auth:", auth);
+console.log("Firestore:", db);
+console.log("Storage:", storage);
+
 /* =========================
    SEARCH SYSTEM
 ========================= */
