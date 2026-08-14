@@ -963,137 +963,134 @@
     </div>
 
 
+<!-- =====================================================
+     MY PRODUCTS
+===================================================== -->
 
-    <!-- =============================================
-         MY PRODUCTS
-    ============================================= -->
+<section class="container my-5">
 
-    <div class="products-card">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                My Products
+            </h2>
 
-            <div>
-
-                <h4 class="mb-1">
-
-                    <i class="bi bi-box-seam"></i>
-
-                    My Products
-
-                </h4>
-
-                <p class="text-muted mb-0">
-
-                    Manage all products added by you.
-
-                </p>
-
-            </div>
-
-
-            <span
-                class="badge text-bg-primary"
-                id="productCountBadge"
-            >
-
-                0 Products
-
-            </span>
-
+            <p class="text-muted mb-0">
+                Manage all your listed products
+            </p>
         </div>
 
-
-        <!-- TABLE -->
-
-        <div class="table-responsive">
-
-            <table
-                class="table table-hover align-middle product-table"
-            >
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>
-                            Image
-                        </th>
-
-                        <th>
-                            Product
-                        </th>
-
-                        <th>
-                            Model
-                        </th>
-
-                        <th>
-                            Price
-                        </th>
-
-                        <th>
-                            Leads
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th class="text-center">
-                            Actions
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="productTableBody">
-
-                    <!-- Products will come here -->
-
-                    <tr id="noProductsRow">
-
-                        <td
-                            colspan="7"
-                            class="text-center py-5"
-                        >
-
-                            <i
-                                class="bi bi-box-seam fs-1 text-muted"
-                            ></i>
-
-                            <p class="mt-3 mb-1 fw-semibold">
-
-                                No Products Added Yet
-
-                            </p>
-
-                            <p class="text-muted mb-0">
-
-                                Add your first product using the form above.
-
-                            </p>
-
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
+        <span
+            id="myProductsCount"
+            class="badge bg-primary fs-6 px-3 py-2"
+        >
+            0 Products
+        </span>
 
     </div>
 
-</main>
+
+    <!-- Loading -->
+
+    <div
+        id="productsLoading"
+        class="text-center py-5 d-none"
+    >
+
+        <div
+            class="spinner-border text-primary"
+            role="status"
+        ></div>
+
+        <p class="mt-3 text-muted">
+            Loading your products...
+        </p>
+
+    </div>
 
 
+    <!-- Empty -->
 
-<!-- =================================================
+    <div
+        id="productsEmpty"
+        class="text-center py-5 d-none"
+    >
+
+        <div class="mb-3">
+
+            <i
+                class="bi bi-box-seam"
+                style="font-size:50px;"
+            ></i>
+
+        </div>
+
+        <h5>
+            No Products Yet
+        </h5>
+
+        <p class="text-muted">
+            Add your first product using the form above.
+        </p>
+
+    </div>
+
+
+    <!-- Product Table -->
+
+    <div
+        id="productsTableWrapper"
+        class="table-responsive d-none"
+    >
+
+        <table class="table table-bordered table-hover align-middle">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>
+                        Image
+                    </th>
+
+                    <th>
+                        Product
+                    </th>
+
+                    <th>
+                        Model
+                    </th>
+
+                    <th>
+                        Price
+                    </th>
+
+                    <th>
+                        Category
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="myProductsTableBody">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
      SHOW PRODUCT MODAL
-================================================= -->
+===================================================== -->
 
 <div
     class="modal fade"
@@ -1106,15 +1103,10 @@
 
         <div class="modal-content">
 
-
             <div class="modal-header">
 
                 <h5 class="modal-title">
-
-                    <i class="bi bi-eye"></i>
-
                     Product Details
-
                 </h5>
 
                 <button
@@ -1130,77 +1122,59 @@
 
                 <div class="row g-4">
 
-
-                    <div class="col-md-5">
+                    <div class="col-md-6 text-center">
 
                         <img
                             id="showProductImage"
                             src=""
                             alt="Product"
-                            class="product-detail-image"
+                            class="img-fluid rounded shadow-sm"
+                            style="
+                                max-height:350px;
+                                width:100%;
+                                object-fit:contain;
+                            "
                         >
 
                     </div>
 
 
-                    <div class="col-md-7">
-
+                    <div class="col-md-6">
 
                         <h3
                             id="showProductName"
-                            class="mb-3"
-                        >
+                            class="fw-bold"
+                        ></h3>
 
-                            Product Name
-
-                        </h3>
-
-
-                        <p>
+                        <p class="mb-2">
 
                             <strong>
                                 Model:
                             </strong>
 
-                            <span id="showProductModel">
-                            </span>
+                            <span id="showProductModel"></span>
 
                         </p>
 
 
-                        <p>
+                        <p class="mb-2">
 
                             <strong>
                                 Price:
                             </strong>
 
-                            ₹<span id="showProductPrice">
-                            </span>
+                            ₹<span id="showProductPrice"></span>
 
                         </p>
 
 
-                        <p>
+                        <p class="mb-2">
 
                             <strong>
                                 Category:
                             </strong>
 
-                            <span id="showProductCategory">
-                            </span>
-
-                        </p>
-
-
-                        <p>
-
-                            <strong>
-                                Leads:
-                            </strong>
-
-                            <span id="showProductLeads">
-                                0
-                            </span>
+                            <span id="showProductCategory"></span>
 
                         </p>
 
@@ -1208,21 +1182,14 @@
                         <hr>
 
 
-                        <h6>
-
+                        <h6 class="fw-bold">
                             Description
-
                         </h6>
-
 
                         <p
                             id="showProductDescription"
                             class="text-muted"
-                        >
-
-                            Product description
-
-                        </p>
+                        ></p>
 
                     </div>
 
@@ -1238,9 +1205,7 @@
                     class="btn btn-secondary"
                     data-bs-dismiss="modal"
                 >
-
                     Close
-
                 </button>
 
             </div>
@@ -1252,10 +1217,9 @@
 </div>
 
 
-
-<!-- =================================================
+<!-- =====================================================
      EDIT PRODUCT MODAL
-================================================= -->
+===================================================== -->
 
 <div
     class="modal fade"
@@ -1268,15 +1232,10 @@
 
         <div class="modal-content">
 
-
             <div class="modal-header">
 
                 <h5 class="modal-title">
-
-                    <i class="bi bi-pencil-square"></i>
-
                     Edit Product
-
                 </h5>
 
                 <button
@@ -1292,217 +1251,163 @@
 
                 <div class="modal-body">
 
-                    <!-- Product ID -->
-
                     <input
                         type="hidden"
                         id="editProductId"
                     >
 
 
-                    <div class="row g-3">
+                    <input
+                        type="hidden"
+                        id="editOldImageURL"
+                    >
 
 
-                        <!-- Existing Image -->
+                    <div class="text-center mb-4">
 
-                        <div class="col-12">
+                        <img
+                            id="editProductImagePreview"
+                            src=""
+                            alt="Product"
+                            class="img-thumbnail"
+                            style="
+                                width:180px;
+                                height:150px;
+                                object-fit:contain;
+                            "
+                        >
 
-                            <div
-                                class="text-center mb-3"
-                            >
+                    </div>
 
-                                <img
-                                    id="editProductImagePreview"
-                                    src=""
-                                    alt="Product"
-                                    style="
-                                        width:150px;
-                                        height:150px;
-                                        object-fit:cover;
-                                        border-radius:10px;
-                                    "
-                                >
 
-                            </div>
+                    <div class="mb-3">
 
-                        </div>
+                        <label
+                            class="form-label fw-semibold"
+                        >
+                            Product Image
+                        </label>
 
+                        <input
+                            type="file"
+                            class="form-control"
+                            id="editProductImage"
+                            accept="image/*"
+                        >
 
-                        <!-- New Image -->
+                        <small class="text-muted">
+                            Leave empty if you don't want to change the image.
+                        </small>
 
-                        <div class="col-12">
+                    </div>
 
-                            <label
-                                for="editProductImage"
-                                class="form-label"
-                            >
 
-                                Change Product Image
+                    <div class="mb-3">
 
-                            </label>
+                        <label class="form-label">
+                            Product Name
+                        </label>
 
-                            <input
-                                type="file"
-                                id="editProductImage"
-                                class="form-control"
-                                accept="image/*"
-                            >
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="editProductName"
+                            required
+                        >
 
-                        </div>
+                    </div>
 
 
-                        <!-- Name -->
+                    <div class="mb-3">
 
-                        <div class="col-md-6">
+                        <label class="form-label">
+                            Model Number
+                        </label>
 
-                            <label
-                                for="editProductName"
-                                class="form-label"
-                            >
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="editProductModel"
+                            required
+                        >
 
-                                Product Name
+                    </div>
 
-                            </label>
 
-                            <input
-                                type="text"
-                                id="editProductName"
-                                class="form-control"
-                                required
-                            >
+                    <div class="mb-3">
 
-                        </div>
+                        <label class="form-label">
+                            Price
+                        </label>
 
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="editProductPrice"
+                            min="0"
+                            required
+                        >
 
-                        <!-- Model -->
+                    </div>
 
-                        <div class="col-md-6">
 
-                            <label
-                                for="editProductModel"
-                                class="form-label"
-                            >
+                    <div class="mb-3">
 
-                                Model Number
+                        <label class="form-label">
+                            Category
+                        </label>
 
-                            </label>
+                        <select
+                            class="form-select"
+                            id="editProductCategory"
+                            required
+                        >
 
-                            <input
-                                type="text"
-                                id="editProductModel"
-                                class="form-control"
-                                required
-                            >
+                            <option value="">
+                                Select Category
+                            </option>
 
-                        </div>
+                            <option value="Furniture">
+                                Furniture
+                            </option>
 
+                            <option value="Electronics">
+                                Electronics
+                            </option>
 
-                        <!-- Price -->
+                            <option value="Mobile">
+                                Mobile
+                            </option>
 
-                        <div class="col-md-6">
+                            <option value="Computer">
+                                Computer
+                            </option>
 
-                            <label
-                                for="editProductPrice"
-                                class="form-label"
-                            >
+                            <option value="Home Appliances">
+                                Home Appliances
+                            </option>
 
-                                Price
+                            <option value="Other">
+                                Other
+                            </option>
 
-                            </label>
+                        </select>
 
-                            <input
-                                type="number"
-                                id="editProductPrice"
-                                class="form-control"
-                                min="0"
-                                required
-                            >
+                    </div>
 
-                        </div>
 
+                    <div class="mb-3">
 
-                        <!-- Category -->
+                        <label class="form-label">
+                            Short Description
+                        </label>
 
-                        <div class="col-md-6">
-
-                            <label
-                                for="editProductCategory"
-                                class="form-label"
-                            >
-
-                                Category
-
-                            </label>
-
-                            <select
-                                id="editProductCategory"
-                                class="form-select"
-                                required
-                            >
-
-                                <option value="">
-
-                                    Select Category
-
-                                </option>
-
-                                <option value="Furniture">
-
-                                    Furniture
-
-                                </option>
-
-                                <option value="Electronics">
-
-                                    Electronics
-
-                                </option>
-
-                                <option value="Garments">
-
-                                    Garments
-
-                                </option>
-
-                                <option value="Interior">
-
-                                    Interior
-
-                                </option>
-
-                                <option value="Other">
-
-                                    Other
-
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <!-- Description -->
-
-                        <div class="col-12">
-
-                            <label
-                                for="editProductDescription"
-                                class="form-label"
-                            >
-
-                                Short Description
-
-                            </label>
-
-                            <textarea
-                                id="editProductDescription"
-                                class="form-control"
-                                rows="5"
-                                maxlength="500"
-                                required
-                            ></textarea>
-
-                        </div>
+                        <textarea
+                            class="form-control"
+                            id="editProductDescription"
+                            rows="4"
+                            required
+                        ></textarea>
 
                     </div>
 
@@ -1516,21 +1421,24 @@
                         class="btn btn-secondary"
                         data-bs-dismiss="modal"
                     >
-
-                        Cancel
-
+                        Close
                     </button>
 
 
                     <button
                         type="submit"
-                        id="updateProductBtn"
                         class="btn btn-primary"
+                        id="updateProductBtn"
                     >
 
-                        <i class="bi bi-check-lg"></i>
+                        <span id="updateProductBtnText">
+                            Update Product
+                        </span>
 
-                        Update Product
+                        <span
+                            id="updateProductSpinner"
+                            class="spinner-border spinner-border-sm d-none"
+                        ></span>
 
                     </button>
 
@@ -1543,114 +1451,6 @@
     </div>
 
 </div>
-
-
-
-<!-- =================================================
-     DELETE PRODUCT MODAL
-================================================= -->
-
-<div
-    class="modal fade"
-    id="deleteProductModal"
-    tabindex="-1"
-    aria-hidden="true"
->
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-
-
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-
-                    <i class="bi bi-trash"></i>
-
-                    Delete Product
-
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
-
-            </div>
-
-
-            <div class="modal-body text-center py-4">
-
-                <i
-                    class="bi bi-exclamation-triangle text-danger"
-                    style="font-size:50px;"
-                ></i>
-
-
-                <h5 class="mt-3">
-
-                    Are you sure?
-
-                </h5>
-
-
-                <p class="text-muted">
-
-                    You are about to delete
-
-                    <strong id="deleteProductName">
-                    </strong>
-
-                    .
-
-                    This action cannot be undone.
-
-                </p>
-
-
-                <input
-                    type="hidden"
-                    id="deleteProductId"
-                >
-
-            </div>
-
-
-            <div class="modal-footer justify-content-center">
-
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                >
-
-                    Cancel
-
-                </button>
-
-
-                <button
-                    type="button"
-                    id="confirmDeleteBtn"
-                    class="btn btn-danger"
-                >
-
-                    <i class="bi bi-trash"></i>
-
-                    Delete
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
 
 
 <!-- =================================================
@@ -1691,6 +1491,10 @@
 <script
     type="module"
     src="dashboard.js"
+></script>
+    <script
+    type="module"
+    src="products.js"
 ></script>
 </body>
 </html>
