@@ -10,22 +10,260 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Dashboard - BizListing</title>
+    <title>Dashboard | Business Listing</title>
+
+
+    <!-- Bootstrap CSS -->
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
+
+    <!-- Bootstrap Icons -->
+
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     >
 
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
+
+    <style>
+
+        body {
+            background: #f5f7fb;
+        }
+
+
+        /* =========================================
+           NAVBAR
+        ========================================= */
+
+        .navbar-brand {
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           DASHBOARD HEADER
+        ========================================= */
+
+        .dashboard-header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+
+        /* =========================================
+           USER INFO
+        ========================================= */
+
+        .user-info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            height: 100%;
+        }
+
+
+        .user-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e9f2ff;
+            font-size: 28px;
+        }
+
+
+        .info-label {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 3px;
+        }
+
+
+        .info-value {
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+
+        /* =========================================
+           ADD PRODUCT CARD
+        ========================================= */
+
+        .add-product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+
+        /* =========================================
+           IMAGE PREVIEW
+        ========================================= */
+
+        .image-preview {
+            width: 100%;
+            height: 220px;
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        .image-placeholder {
+            text-align: center;
+            color: #888;
+        }
+
+
+        .image-placeholder i {
+            font-size: 45px;
+        }
+
+
+        /* =========================================
+           PRODUCTS CARD
+        ========================================= */
+
+        .products-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+
+        /* =========================================
+           PRODUCT TABLE
+        ========================================= */
+
+        .product-table img {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+
+        .product-description {
+            max-width: 250px;
+        }
+
+
+        /* =========================================
+           ACTION BUTTONS
+        ========================================= */
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* =========================================
+           STAT CARD
+        ========================================= */
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: #e9f2ff;
+        }
+
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           MODAL PRODUCT IMAGE
+        ========================================= */
+
+        .product-detail-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        footer {
+            margin-top: 50px;
+            background: white;
+            padding: 25px 0;
+            border-top: 1px solid #eee;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 767px) {
+
+            .dashboard-header {
+                padding: 20px;
+            }
+
+
+            .add-product-card,
+            .products-card,
+            .user-info-card {
+                padding: 18px;
+            }
+
+
+            .image-preview {
+                height: 180px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -33,54 +271,1535 @@
 <body>
 
 
-<nav class="navbar navbar-expand-lg bg-white border-bottom">
+<!-- =================================================
+     NAVBAR
+================================================= -->
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
 
     <div class="container">
 
-        <a
-            class="navbar-brand fw-bold"
-            href="index.html"
-        >
-            <i class="bi bi-buildings"></i>
-            BizListing
-        </a>
+
+        <!-- Brand -->
 
         <a
+            class="navbar-brand"
             href="index.html"
-            class="btn btn-outline-primary"
         >
-            <i class="bi bi-house"></i>
-            Home
+
+            <i class="bi bi-buildings"></i>
+
+            Business Listing
+
         </a>
+
+
+        <!-- Mobile Toggle -->
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#dashboardNavbar"
+        >
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <!-- Navbar -->
+
+        <div
+            class="collapse navbar-collapse"
+            id="dashboardNavbar"
+        >
+
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
+
+                <!-- Home -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="index.html"
+                    >
+
+                        <i class="bi bi-house"></i>
+
+                        Home
+
+                    </a>
+
+                </li>
+
+
+                <!-- Dashboard -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link active"
+                        href="dashboard.html"
+                    >
+
+                        <i class="bi bi-speedometer2"></i>
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+
+                <!-- Logout -->
+
+                <li class="nav-item">
+
+                    <button
+                        type="button"
+                        id="dashboardLogoutBtn"
+                        class="btn btn-danger btn-sm"
+                    >
+
+                        <i class="bi bi-box-arrow-right"></i>
+
+                        Logout
+
+                    </button>
+
+                </li>
+
+
+            </ul>
+
+        </div>
 
     </div>
 
 </nav>
 
 
-<section class="py-5">
 
-    <div class="container">
+<!-- =================================================
+     MAIN
+================================================= -->
 
-        <div class="text-center">
+<main class="container py-4">
 
-            <i
-                class="bi bi-speedometer2 display-1 text-primary">
-            </i>
 
-            <h1 class="mt-3">
-                Dashboard
-            </h1>
+    <!-- =============================================
+         DASHBOARD HEADER
+    ============================================= -->
 
-            <p class="text-muted">
-                Dashboard functionality will be added in the next steps.
-            </p>
+    <div class="dashboard-header mb-4">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-8">
+
+                <h2 class="mb-1">
+
+                    Welcome to Dashboard
+
+                </h2>
+
+                <p class="text-muted mb-0">
+
+                    Manage your business products and listings.
+
+                </p>
+
+            </div>
+
+
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                <span
+                    class="badge text-bg-success px-3 py-2"
+                >
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Account Active
+
+                </span>
+
+            </div>
 
         </div>
 
     </div>
 
-</section>
+
+
+    <!-- =============================================
+         USER INFORMATION + STATISTICS
+    ============================================= -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- USER INFORMATION -->
+
+        <div class="col-lg-8">
+
+            <div class="user-info-card">
+
+                <div class="d-flex align-items-center mb-4">
+
+                    <div class="user-icon me-3">
+
+                        <i class="bi bi-person"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h5 class="mb-1">
+
+                            Business Information
+
+                        </h5>
+
+                        <p class="text-muted mb-0">
+
+                            Your registered business details
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row g-4">
+
+
+                    <!-- Name -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+
+                            Name
+
+                        </div>
+
+                        <div
+                            id="dashboardUserName"
+                            class="info-value"
+                        >
+
+                            Loading...
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Mobile -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+
+                            Mobile Number
+
+                        </div>
+
+                        <div
+                            id="dashboardUserMobile"
+                            class="info-value"
+                        >
+
+                            Loading...
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Email -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+
+                            Email
+
+                        </div>
+
+                        <div
+                            id="dashboardUserEmail"
+                            class="info-value"
+                        >
+
+                            Loading...
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Location -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+
+                            Business Location
+
+                        </div>
+
+                        <div
+                            id="dashboardUserLocation"
+                            class="info-value"
+                        >
+
+                            Loading...
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Area -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+
+                            Area
+
+                        </div>
+
+                        <div
+                            id="dashboardUserArea"
+                            class="info-value"
+                        >
+
+                            Loading...
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Pincode -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+
+                            Pincode
+
+                        </div>
+
+                        <div
+                            id="dashboardUserPincode"
+                            class="info-value"
+                        >
+
+                            Loading...
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- STATISTICS -->
+
+        <div class="col-lg-4">
+
+            <div class="stat-card h-100">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="stat-icon me-3">
+
+                        <i class="bi bi-box-seam"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="text-muted">
+
+                            Total Products
+
+                        </div>
+
+                        <div
+                            id="totalProducts"
+                            class="stat-number"
+                        >
+
+                            0
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <hr>
+
+
+                <div class="d-flex justify-content-between">
+
+                    <span class="text-muted">
+
+                        Total Leads
+
+                    </span>
+
+                    <strong id="totalLeads">
+
+                        0
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =============================================
+         ADD PRODUCT
+    ============================================= -->
+
+    <div class="add-product-card mb-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h4 class="mb-1">
+
+                    <i class="bi bi-plus-circle"></i>
+
+                    Add Product
+
+                </h4>
+
+                <p class="text-muted mb-0">
+
+                    Add a new product to your business listing.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form id="addProductForm">
+
+
+            <div class="row g-4">
+
+
+                <!-- IMAGE -->
+
+                <div class="col-lg-4">
+
+                    <label class="form-label fw-semibold">
+
+                        Product Image
+
+                    </label>
+
+
+                    <div
+                        class="image-preview mb-3"
+                        id="productImagePreview"
+                    >
+
+                        <div class="image-placeholder">
+
+                            <i class="bi bi-image"></i>
+
+                            <div>
+
+                                Select product image
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <input
+                        type="file"
+                        id="productImage"
+                        class="form-control"
+                        accept="image/*"
+                    >
+
+                    <small class="text-muted">
+
+                        JPG, PNG or WEBP
+
+                    </small>
+
+                </div>
+
+
+
+                <!-- PRODUCT DETAILS -->
+
+                <div class="col-lg-8">
+
+                    <div class="row g-3">
+
+
+                        <!-- Product Name -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="productName"
+                                class="form-label"
+                            >
+
+                                Product Name
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="productName"
+                                class="form-control"
+                                placeholder="Enter product name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Model Number -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="modelNumber"
+                                class="form-label"
+                            >
+
+                                Model Number
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="modelNumber"
+                                class="form-control"
+                                placeholder="Enter model number"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Price -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="productPrice"
+                                class="form-label"
+                            >
+
+                                Price
+
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productPrice"
+                                class="form-control"
+                                placeholder="Enter price"
+                                min="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Category -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="productCategory"
+                                class="form-label"
+                            >
+
+                                Category
+
+                            </label>
+
+                            <select
+                                id="productCategory"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+
+                                    Select Category
+
+                                </option>
+
+                                <option value="Furniture">
+
+                                    Furniture
+
+                                </option>
+
+                                <option value="Electronics">
+
+                                    Electronics
+
+                                </option>
+
+                                <option value="Garments">
+
+                                    Garments
+
+                                </option>
+
+                                <option value="Interior">
+
+                                    Interior
+
+                                </option>
+
+                                <option value="Other">
+
+                                    Other
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="col-12">
+
+                            <label
+                                for="productDescription"
+                                class="form-label"
+                            >
+
+                                Short Description
+
+                            </label>
+
+                            <textarea
+                                id="productDescription"
+                                class="form-control"
+                                rows="5"
+                                maxlength="500"
+                                placeholder="Write a short description about the product..."
+                                required
+                            ></textarea>
+
+                            <small class="text-muted">
+
+                                Maximum 500 characters.
+
+                            </small>
+
+                        </div>
+
+
+                        <!-- Submit -->
+
+                        <div class="col-12">
+
+                            <button
+                                type="submit"
+                                id="addProductBtn"
+                                class="btn btn-primary"
+                            >
+
+                                <i class="bi bi-plus-lg"></i>
+
+                                Add Product
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- =============================================
+         MY PRODUCTS
+    ============================================= -->
+
+    <div class="products-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h4 class="mb-1">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    My Products
+
+                </h4>
+
+                <p class="text-muted mb-0">
+
+                    Manage all products added by you.
+
+                </p>
+
+            </div>
+
+
+            <span
+                class="badge text-bg-primary"
+                id="productCountBadge"
+            >
+
+                0 Products
+
+            </span>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-responsive">
+
+            <table
+                class="table table-hover align-middle product-table"
+            >
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>
+                            Image
+                        </th>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Model
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
+
+                        <th>
+                            Leads
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th class="text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="productTableBody">
+
+                    <!-- Products will come here -->
+
+                    <tr id="noProductsRow">
+
+                        <td
+                            colspan="7"
+                            class="text-center py-5"
+                        >
+
+                            <i
+                                class="bi bi-box-seam fs-1 text-muted"
+                            ></i>
+
+                            <p class="mt-3 mb-1 fw-semibold">
+
+                                No Products Added Yet
+
+                            </p>
+
+                            <p class="text-muted mb-0">
+
+                                Add your first product using the form above.
+
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =================================================
+     SHOW PRODUCT MODAL
+================================================= -->
+
+<div
+    class="modal fade"
+    id="showProductModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-eye"></i>
+
+                    Product Details
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div class="row g-4">
+
+
+                    <div class="col-md-5">
+
+                        <img
+                            id="showProductImage"
+                            src=""
+                            alt="Product"
+                            class="product-detail-image"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-7">
+
+
+                        <h3
+                            id="showProductName"
+                            class="mb-3"
+                        >
+
+                            Product Name
+
+                        </h3>
+
+
+                        <p>
+
+                            <strong>
+                                Model:
+                            </strong>
+
+                            <span id="showProductModel">
+                            </span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                Price:
+                            </strong>
+
+                            ₹<span id="showProductPrice">
+                            </span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                Category:
+                            </strong>
+
+                            <span id="showProductCategory">
+                            </span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                Leads:
+                            </strong>
+
+                            <span id="showProductLeads">
+                                0
+                            </span>
+
+                        </p>
+
+
+                        <hr>
+
+
+                        <h6>
+
+                            Description
+
+                        </h6>
+
+
+                        <p
+                            id="showProductDescription"
+                            class="text-muted"
+                        >
+
+                            Product description
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =================================================
+     EDIT PRODUCT MODAL
+================================================= -->
+
+<div
+    class="modal fade"
+    id="editProductModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-pencil-square"></i>
+
+                    Edit Product
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <form id="editProductForm">
+
+                <div class="modal-body">
+
+                    <!-- Product ID -->
+
+                    <input
+                        type="hidden"
+                        id="editProductId"
+                    >
+
+
+                    <div class="row g-3">
+
+
+                        <!-- Existing Image -->
+
+                        <div class="col-12">
+
+                            <div
+                                class="text-center mb-3"
+                            >
+
+                                <img
+                                    id="editProductImagePreview"
+                                    src=""
+                                    alt="Product"
+                                    style="
+                                        width:150px;
+                                        height:150px;
+                                        object-fit:cover;
+                                        border-radius:10px;
+                                    "
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- New Image -->
+
+                        <div class="col-12">
+
+                            <label
+                                for="editProductImage"
+                                class="form-label"
+                            >
+
+                                Change Product Image
+
+                            </label>
+
+                            <input
+                                type="file"
+                                id="editProductImage"
+                                class="form-control"
+                                accept="image/*"
+                            >
+
+                        </div>
+
+
+                        <!-- Name -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="editProductName"
+                                class="form-label"
+                            >
+
+                                Product Name
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="editProductName"
+                                class="form-control"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Model -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="editProductModel"
+                                class="form-label"
+                            >
+
+                                Model Number
+
+                            </label>
+
+                            <input
+                                type="text"
+                                id="editProductModel"
+                                class="form-control"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Price -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="editProductPrice"
+                                class="form-label"
+                            >
+
+                                Price
+
+                            </label>
+
+                            <input
+                                type="number"
+                                id="editProductPrice"
+                                class="form-control"
+                                min="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Category -->
+
+                        <div class="col-md-6">
+
+                            <label
+                                for="editProductCategory"
+                                class="form-label"
+                            >
+
+                                Category
+
+                            </label>
+
+                            <select
+                                id="editProductCategory"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+
+                                    Select Category
+
+                                </option>
+
+                                <option value="Furniture">
+
+                                    Furniture
+
+                                </option>
+
+                                <option value="Electronics">
+
+                                    Electronics
+
+                                </option>
+
+                                <option value="Garments">
+
+                                    Garments
+
+                                </option>
+
+                                <option value="Interior">
+
+                                    Interior
+
+                                </option>
+
+                                <option value="Other">
+
+                                    Other
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="col-12">
+
+                            <label
+                                for="editProductDescription"
+                                class="form-label"
+                            >
+
+                                Short Description
+
+                            </label>
+
+                            <textarea
+                                id="editProductDescription"
+                                class="form-control"
+                                rows="5"
+                                maxlength="500"
+                                required
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+
+                        Cancel
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="updateProductBtn"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-check-lg"></i>
+
+                        Update Product
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =================================================
+     DELETE PRODUCT MODAL
+================================================= -->
+
+<div
+    class="modal fade"
+    id="deleteProductModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-trash"></i>
+
+                    Delete Product
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body text-center py-4">
+
+                <i
+                    class="bi bi-exclamation-triangle text-danger"
+                    style="font-size:50px;"
+                ></i>
+
+
+                <h5 class="mt-3">
+
+                    Are you sure?
+
+                </h5>
+
+
+                <p class="text-muted">
+
+                    You are about to delete
+
+                    <strong id="deleteProductName">
+                    </strong>
+
+                    .
+
+                    This action cannot be undone.
+
+                </p>
+
+
+                <input
+                    type="hidden"
+                    id="deleteProductId"
+                >
+
+            </div>
+
+
+            <div class="modal-footer justify-content-center">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="confirmDeleteBtn"
+                    class="btn btn-danger"
+                >
+
+                    <i class="bi bi-trash"></i>
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =================================================
+     FOOTER
+================================================= -->
+
+<footer>
+
+    <div class="container text-center">
+
+        <p class="mb-0 text-muted">
+
+            © 2026 Business Listing. All rights reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =================================================
+     BOOTSTRAP JS
+================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+<!-- =================================================
+     DASHBOARD JS
+     
+     Firebase/product functionality will be
+     added in the next part.
+================================================= -->
+
+<script type="module">
+
+    console.log(
+        "Dashboard UI Loaded"
+    );
+
+
+    /* =============================================
+       IMAGE PREVIEW
+    ============================================= */
+
+    const productImage =
+        document.getElementById(
+            "productImage"
+        );
+
+
+    const productImagePreview =
+        document.getElementById(
+            "productImagePreview"
+        );
+
+
+    if (productImage) {
+
+        productImage.addEventListener(
+            "change",
+            function() {
+
+                const file =
+                    this.files[0];
+
+
+                if (!file) {
+
+                    productImagePreview.innerHTML = `
+
+                        <div class="image-placeholder">
+
+                            <i class="bi bi-image"></i>
+
+                            <div>
+                                Select product image
+                            </div>
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function(event) {
+
+                        productImagePreview.innerHTML = `
+
+                            <img
+                                src="${event.target.result}"
+                                alt="Product Preview"
+                            >
+
+                        `;
+
+                    };
+
+
+                reader.readAsDataURL(file);
+
+            }
+        );
+
+    }
+
+
+    /* =============================================
+       DASHBOARD LOGOUT BUTTON
+       
+       Actual Firebase logout will be connected
+       in dashboard.js.
+    ============================================= */
+
+    const dashboardLogoutBtn =
+        document.getElementById(
+            "dashboardLogoutBtn"
+        );
+
+
+    if (dashboardLogoutBtn) {
+
+        dashboardLogoutBtn.addEventListener(
+            "click",
+            function() {
+
+                console.log(
+                    "Dashboard logout clicked"
+                );
+
+            }
+        );
+
+    }
+
+
+</script>
 
 
 </body>
