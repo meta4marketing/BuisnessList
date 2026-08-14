@@ -200,11 +200,10 @@ async function loadUserProfile(
                 "Not available"
             );
 
-
-            setProfileValue(
-                dashboardUserLocation,
-                "Not available"
-            );
+setProfileValue(
+    dashboardUserLocation,
+    userData.businessLocation
+);
 
 
             setProfileValue(
