@@ -1,6 +1,11 @@
 /* =====================================================
    PART 4
-   FIREBASE LOGIN
+   FIREBASE LOGIN SYSTEM - UPGRADED VERSION
+===================================================== */
+
+
+/* =====================================================
+   FIREBASE IMPORTS
 ===================================================== */
 
 import {
@@ -9,7 +14,10 @@ import {
 
 import {
     signInWithEmailAndPassword,
-    signOut
+    signOut,
+    onAuthStateChanged,
+    sendPasswordResetEmail,
+    reload
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
 
@@ -20,29 +28,41 @@ import {
 const loginBtn =
     document.getElementById("loginBtn");
 
+
 const loginModalElement =
     document.getElementById("loginModal");
+
 
 const loginForm =
     document.getElementById("loginForm");
 
+
 const loginEmail =
     document.getElementById("loginEmail");
+
 
 const loginPassword =
     document.getElementById("loginPassword");
 
+
 const loginAlert =
     document.getElementById("loginAlert");
+
 
 const loginSubmitBtn =
     document.getElementById("loginSubmitBtn");
 
+
 const loginBtnText =
     document.getElementById("loginBtnText");
 
+
 const loginSpinner =
     document.getElementById("loginSpinner");
+
+
+const forgotPasswordBtn =
+    document.getElementById("forgotPasswordBtn");
 
 
 /* =====================================================
@@ -52,8 +72,10 @@ const loginSpinner =
 const registerBtn =
     document.getElementById("registerBtn");
 
+
 const dashboardBtn =
     document.getElementById("dashboardBtn");
+
 
 const logoutBtn =
     document.getElementById("logoutBtn");
@@ -64,6 +86,7 @@ const logoutBtn =
 ===================================================== */
 
 let loginModal = null;
+
 
 if (loginModalElement) {
 
@@ -76,7 +99,7 @@ if (loginModalElement) {
 
 
 /* =====================================================
-   OPEN LOGIN POPUP
+   OPEN LOGIN MODAL
 ===================================================== */
 
 if (
@@ -90,9 +113,13 @@ if (
 
             clearLoginAlert();
 
+
             if (loginForm) {
+
                 loginForm.reset();
+
             }
+
 
             loginModal.show();
 
@@ -103,7 +130,7 @@ if (
 
 
 /* =====================================================
-   LOGIN FORM
+   LOGIN FORM SUBMIT
 ===================================================== */
 
 if (loginForm) {
@@ -115,22 +142,44 @@ if (loginForm) {
             event.preventDefault();
 
 
+            /*
+               Prevent double click
+            */
+
+            if (
+                loginSubmitBtn &&
+                loginSubmitBtn.disabled
+            ) {
+
+                return;
+
+            }
+
+
             clearLoginAlert();
 
 
+            /* ==========================================
+               GET VALUES
+            ========================================== */
+
             const email =
-                loginEmail.value
-                    .trim()
-                    .toLowerCase();
+                loginEmail
+                    ? loginEmail.value
+                        .trim()
+                        .toLowerCase()
+                    : "";
 
 
             const password =
-                loginPassword.value;
+                loginPassword
+                    ? loginPassword.value
+                    : "";
 
 
-            /* =========================================
+            /* ==========================================
                VALIDATION
-            ========================================= */
+            ========================================== */
 
             if (!email) {
 
@@ -156,18 +205,23 @@ if (loginForm) {
             }
 
 
-            /* =========================================
-               LOADING
-            ========================================= */
+            /* ==========================================
+               START LOADING
+            ========================================== */
 
             setLoginLoading(true);
 
 
             try {
 
-                /* =====================================
+                console.log(
+                    "Starting Firebase login..."
+                );
+
+
+                /* ======================================
                    FIREBASE LOGIN
-                ===================================== */
+                ====================================== */
 
                 const userCredential =
                     await signInWithEmailAndPassword(
@@ -187,15 +241,22 @@ if (loginForm) {
                 );
 
 
-                /* =====================================
+                /* ======================================
+                   REFRESH USER
+                ====================================== */
+
+                await reload(user);
+
+
+                /* ======================================
                    EMAIL VERIFICATION CHECK
-                ===================================== */
+                ====================================== */
 
                 if (!user.emailVerified) {
 
                     showLoginAlert(
 
-                        "Your email is not verified. Please verify your email before login.",
+                        "Your email is not verified. Please verify your email before logging in.",
 
                         "warning"
 
@@ -210,9 +271,9 @@ if (loginForm) {
                 }
 
 
-                /* =====================================
+                /* ======================================
                    LOGIN SUCCESS
-                ===================================== */
+                ====================================== */
 
                 showLoginAlert(
 
@@ -223,59 +284,32 @@ if (loginForm) {
                 );
 
 
-                /* =====================================
+                /* ======================================
                    UPDATE NAVBAR
-                ===================================== */
+                ====================================== */
 
-                if (registerBtn) {
-
-                    registerBtn.classList.add(
-                        "d-none"
-                    );
-
-                }
+                updateNavbarLoggedIn();
 
 
-                if (loginBtn) {
-
-                    loginBtn.classList.add(
-                        "d-none"
-                    );
-
-                }
-
-
-                if (dashboardBtn) {
-
-                    dashboardBtn.classList.remove(
-                        "d-none"
-                    );
-
-                }
-
-
-                if (logoutBtn) {
-
-                    logoutBtn.classList.remove(
-                        "d-none"
-                    );
-
-                }
-
-
-                /* =====================================
+                /* ======================================
                    CLOSE LOGIN MODAL
-                ===================================== */
+                ====================================== */
 
-                setTimeout(() => {
+                if (loginModal) {
 
-                    if (loginModal) {
+                    loginModal.hide();
 
-                        loginModal.hide();
+                }
 
-                    }
 
-                }, 800);
+                /*
+                   Bootstrap cleanup.
+
+                   This prevents invisible modal
+                   backdrop from blocking the page.
+                */
+
+                cleanupModal();
 
 
             }
@@ -289,8 +323,11 @@ if (loginForm) {
 
 
                 showLoginAlert(
+
                     getLoginErrorMessage(error),
+
                     "danger"
+
                 );
 
             }
@@ -316,7 +353,9 @@ function setLoginLoading(
 ) {
 
     if (!loginSubmitBtn) {
+
         return;
+
     }
 
 
@@ -377,7 +416,9 @@ function showLoginAlert(
 ) {
 
     if (!loginAlert) {
+
         return;
+
     }
 
 
@@ -399,7 +440,9 @@ function showLoginAlert(
 function clearLoginAlert() {
 
     if (!loginAlert) {
+
         return;
+
     }
 
 
@@ -414,7 +457,7 @@ function clearLoginAlert() {
 
 
 /* =====================================================
-   FIREBASE ERROR MESSAGE
+   FIREBASE LOGIN ERROR
 ===================================================== */
 
 function getLoginErrorMessage(
@@ -476,11 +519,309 @@ function getLoginErrorMessage(
             return "Network error. Please check your internet connection.";
 
 
+        case "auth/operation-not-allowed":
+
+            return "Email and Password login is not enabled in Firebase.";
+
+
         default:
 
             return "Login failed. Please check your email and password.";
 
     }
+
+}
+
+
+/* =====================================================
+   NAVBAR - LOGGED IN
+===================================================== */
+
+function updateNavbarLoggedIn() {
+
+    /* -----------------------------------------
+       Hide Register
+    ----------------------------------------- */
+
+    if (registerBtn) {
+
+        registerBtn.classList.add(
+            "d-none"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Hide Login
+    ----------------------------------------- */
+
+    if (loginBtn) {
+
+        loginBtn.classList.add(
+            "d-none"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Show Dashboard
+    ----------------------------------------- */
+
+    if (dashboardBtn) {
+
+        dashboardBtn.classList.remove(
+            "d-none"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Show Logout
+    ----------------------------------------- */
+
+    if (logoutBtn) {
+
+        logoutBtn.classList.remove(
+            "d-none"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   NAVBAR - LOGGED OUT
+===================================================== */
+
+function updateNavbarLoggedOut() {
+
+    /* -----------------------------------------
+       Show Register
+    ----------------------------------------- */
+
+    if (registerBtn) {
+
+        registerBtn.classList.remove(
+            "d-none"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Show Login
+    ----------------------------------------- */
+
+    if (loginBtn) {
+
+        loginBtn.classList.remove(
+            "d-none"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Hide Dashboard
+    ----------------------------------------- */
+
+    if (dashboardBtn) {
+
+        dashboardBtn.classList.add(
+            "d-none"
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Hide Logout
+    ----------------------------------------- */
+
+    if (logoutBtn) {
+
+        logoutBtn.classList.add(
+            "d-none"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   BOOTSTRAP MODAL CLEANUP
+===================================================== */
+
+function cleanupModal() {
+
+    /*
+       Wait a little so Bootstrap can
+       finish its hide animation.
+    */
+
+    setTimeout(() => {
+
+
+        /* -------------------------------------
+           Remove modal-open
+        ------------------------------------- */
+
+        document.body.classList.remove(
+            "modal-open"
+        );
+
+
+        /* -------------------------------------
+           Restore body scrolling
+        ------------------------------------- */
+
+        document.body.style.removeProperty(
+            "overflow"
+        );
+
+
+        document.body.style.removeProperty(
+            "padding-right"
+        );
+
+
+        /* -------------------------------------
+           Remove leftover backdrops
+        ------------------------------------- */
+
+        document
+            .querySelectorAll(
+                ".modal-backdrop"
+            )
+            .forEach(
+                backdrop => {
+
+                    backdrop.remove();
+
+                }
+            );
+
+
+        /* -------------------------------------
+           Remove accidental inline styles
+        ------------------------------------- */
+
+        document.body.style.removeProperty(
+            "height"
+        );
+
+
+    }, 350);
+
+}
+
+
+/* =====================================================
+   FORGOT PASSWORD
+===================================================== */
+
+if (forgotPasswordBtn) {
+
+    forgotPasswordBtn.addEventListener(
+        "click",
+        async function() {
+
+
+            clearLoginAlert();
+
+
+            const email =
+                loginEmail
+                    ? loginEmail.value
+                        .trim()
+                        .toLowerCase()
+                    : "";
+
+
+            if (!email) {
+
+                showLoginAlert(
+
+                    "Please enter your email address first.",
+
+                    "warning"
+
+                );
+
+                if (loginEmail) {
+
+                    loginEmail.focus();
+
+                }
+
+                return;
+
+            }
+
+
+            try {
+
+                forgotPasswordBtn.disabled =
+                    true;
+
+
+                forgotPasswordBtn.innerText =
+                    "Sending...";
+
+
+                await sendPasswordResetEmail(
+                    auth,
+                    email
+                );
+
+
+                showLoginAlert(
+
+                    "Password reset email sent. Please check your inbox and spam folder.",
+
+                    "success"
+
+                );
+
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Password Reset Error:",
+                    error
+                );
+
+
+                showLoginAlert(
+
+                    getLoginErrorMessage(error),
+
+                    "danger"
+
+                );
+
+            }
+
+            finally {
+
+                forgotPasswordBtn.disabled =
+                    false;
+
+
+                forgotPasswordBtn.innerText =
+                    "Forgot Password?";
+
+            }
+
+        }
+    );
 
 }
 
@@ -495,6 +836,15 @@ if (logoutBtn) {
         "click",
         async function() {
 
+
+            /*
+               Prevent multiple logout clicks
+            */
+
+            logoutBtn.disabled =
+                true;
+
+
             try {
 
                 await signOut(auth);
@@ -505,40 +855,15 @@ if (logoutBtn) {
                 );
 
 
-                if (registerBtn) {
-
-                    registerBtn.classList.remove(
-                        "d-none"
-                    );
-
-                }
+                updateNavbarLoggedOut();
 
 
-                if (loginBtn) {
+                /*
+                   Make sure any modal overlay
+                   is removed.
+                */
 
-                    loginBtn.classList.remove(
-                        "d-none"
-                    );
-
-                }
-
-
-                if (dashboardBtn) {
-
-                    dashboardBtn.classList.add(
-                        "d-none"
-                    );
-
-                }
-
-
-                if (logoutBtn) {
-
-                    logoutBtn.classList.add(
-                        "d-none"
-                    );
-
-                }
+                cleanupModal();
 
 
                 alert(
@@ -554,6 +879,18 @@ if (logoutBtn) {
                     error
                 );
 
+
+                alert(
+                    "Logout failed. Please try again."
+                );
+
+            }
+
+            finally {
+
+                logoutBtn.disabled =
+                    false;
+
             }
 
         }
@@ -562,6 +899,72 @@ if (logoutBtn) {
 }
 
 
+/* =====================================================
+   AUTH STATE LISTENER
+===================================================== */
+
+onAuthStateChanged(
+    auth,
+    async function(user) {
+
+        console.log(
+            "Auth State:",
+            user
+        );
+
+
+        if (!user) {
+
+            updateNavbarLoggedOut();
+
+            return;
+
+        }
+
+
+        try {
+
+            /*
+               Get latest Firebase user data.
+            */
+
+            await reload(user);
+
+
+            if (user.emailVerified) {
+
+                updateNavbarLoggedIn();
+
+            }
+
+            else {
+
+                updateNavbarLoggedOut();
+
+            }
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "Auth State Error:",
+                error
+            );
+
+
+            updateNavbarLoggedOut();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
 console.log(
-    "Part 4 Firebase Login Loaded"
+    "Part 4 Firebase Login - Upgraded Loaded"
 );
