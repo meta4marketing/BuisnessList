@@ -33,7 +33,7 @@ const dashboardUserEmail =
     document.getElementById("dashboardUserEmail");
 
 const dashboardUserLocation =
-    document.getElementById("businessLocation");
+    document.getElementById("dashboardUserLocation");
 
 const dashboardUserArea =
     document.getElementById("dashboardUserArea");
