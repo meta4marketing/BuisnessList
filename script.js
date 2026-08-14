@@ -7,13 +7,11 @@ import {
     db
 } from "./firebase-config.js";
 
-
 import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
     reload
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-
 
 import {
     doc,
@@ -22,12 +20,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 
-
 /* =====================================================
    DOM ELEMENTS
 ===================================================== */
 
-// Search
+/* ---------- Search ---------- */
 
 const searchInput =
     document.getElementById("searchInput");
@@ -42,7 +39,7 @@ const listingCount =
     document.getElementById("listingCount");
 
 
-// Navbar
+/* ---------- Navbar ---------- */
 
 const registerBtn =
     document.getElementById("registerBtn");
@@ -57,7 +54,7 @@ const logoutBtn =
     document.getElementById("logoutBtn");
 
 
-// Registration
+/* ---------- Registration ---------- */
 
 const registrationForm =
     document.getElementById("registrationForm");
@@ -75,7 +72,7 @@ const registrationAlert =
     document.getElementById("registrationAlert");
 
 
-// Verification
+/* ---------- Verification ---------- */
 
 const verificationEmail =
     document.getElementById("verificationEmail");
@@ -90,7 +87,6 @@ const resendVerificationBtn =
     document.getElementById("resendVerificationBtn");
 
 
-
 /* =====================================================
    BOOTSTRAP MODALS
 ===================================================== */
@@ -101,22 +97,48 @@ const registerModalElement =
 const verificationModalElement =
     document.getElementById("verificationModal");
 
+const loginModalElement =
+    document.getElementById("loginModal");
+
 
 const registerModal =
-    new bootstrap.Modal(registerModalElement);
-
+    registerModalElement
+        ? new bootstrap.Modal(registerModalElement)
+        : null;
 
 const verificationModal =
-    new bootstrap.Modal(verificationModalElement);
+    verificationModalElement
+        ? new bootstrap.Modal(verificationModalElement)
+        : null;
 
+const loginModal =
+    loginModalElement
+        ? new bootstrap.Modal(loginModalElement)
+        : null;
 
 
 /* =====================================================
-   TEMPORARY REGISTRATION EMAIL
+   TEMPORARY REGISTRATION DATA
 ===================================================== */
 
 let registeredEmail = "";
 
+let pendingRegistration = null;
+
+
+/*
+   We intentionally DO NOT store password.
+
+   Password should never be stored in:
+   localStorage
+   sessionStorage
+   Firestore
+   JavaScript variables after registration
+*/
+
+
+const PENDING_REGISTRATION_KEY =
+    "businessList_pending_registration";
 
 
 /* =====================================================
@@ -124,6 +146,10 @@ let registeredEmail = "";
 ===================================================== */
 
 function searchProducts() {
+
+    if (!searchInput || !productContainer) {
+        return;
+    }
 
     const searchValue =
         searchInput.value
@@ -150,6 +176,11 @@ function searchProducts() {
             card.closest(".col-12");
 
 
+        if (!parentColumn) {
+            return;
+        }
+
+
         if (
             searchValue === "" ||
             cardText.includes(searchValue)
@@ -168,326 +199,148 @@ function searchProducts() {
     });
 
 
-    listingCount.innerText =
-        visibleCount;
+    if (listingCount) {
+
+        listingCount.innerText =
+            visibleCount;
+
+    }
 
 }
 
 
-searchBtn.addEventListener(
-    "click",
-    searchProducts
-);
+if (searchBtn) {
+
+    searchBtn.addEventListener(
+        "click",
+        searchProducts
+    );
+
+}
 
 
-searchInput.addEventListener(
-    "input",
-    searchProducts
-);
+if (searchInput) {
 
+    searchInput.addEventListener(
+        "input",
+        searchProducts
+    );
+
+}
 
 
 /* =====================================================
    OPEN REGISTER MODAL
 ===================================================== */
 
-registerBtn.addEventListener(
-    "click",
-    () => {
+if (registerBtn) {
 
-        clearRegistrationForm();
+    registerBtn.addEventListener(
+        "click",
+        () => {
 
-        registerModal.show();
+            clearRegistrationForm();
 
-    }
-);
+            if (registerModal) {
+                registerModal.show();
+            }
 
+        }
+    );
+
+}
 
 
 /* =====================================================
    REGISTRATION FORM SUBMIT
 ===================================================== */
 
-registrationForm.addEventListener(
-    "submit",
-    async function(event) {
+if (registrationForm) {
 
-        event.preventDefault();
+    registrationForm.addEventListener(
+        "submit",
+        async function(event) {
 
+            event.preventDefault();
 
-        clearRegistrationAlert();
 
+            /*
+               Prevent double submission
+            */
 
-        const name =
-            document.getElementById(
-                "registerName"
-            ).value.trim();
+            if (
+                registerSubmitBtn &&
+                registerSubmitBtn.disabled
+            ) {
 
+                return;
 
-        const mobile =
-            document.getElementById(
-                "registerMobile"
-            ).value.trim();
+            }
 
 
-        const email =
-            document.getElementById(
-                "registerEmail"
-            ).value.trim();
+            clearRegistrationAlert();
 
 
-        const businessLocation =
-            document.getElementById(
-                "businessLocation"
-            ).value.trim();
+            /* ==========================================
+               GET FORM VALUES
+            ========================================== */
 
+            const name =
+                document.getElementById(
+                    "registerName"
+                )?.value.trim() || "";
 
-        const area =
-            document.getElementById(
-                "businessArea"
-            ).value.trim();
 
+            const mobile =
+                document.getElementById(
+                    "registerMobile"
+                )?.value.trim() || "";
 
-        const pincode =
-            document.getElementById(
-                "businessPincode"
-            ).value.trim();
 
+            const email =
+                document.getElementById(
+                    "registerEmail"
+                )?.value.trim().toLowerCase() || "";
 
-        const password =
-            document.getElementById(
-                "registerPassword"
-            ).value;
 
+            const businessLocation =
+                document.getElementById(
+                    "businessLocation"
+                )?.value.trim() || "";
 
-        const confirmPassword =
-            document.getElementById(
-                "confirmPassword"
-            ).value;
 
+            const area =
+                document.getElementById(
+                    "businessArea"
+                )?.value.trim() || "";
 
 
-        /* ==========================================
-           VALIDATION
-        ========================================== */
+            const pincode =
+                document.getElementById(
+                    "businessPincode"
+                )?.value.trim() || "";
 
 
-        if (name.length < 2) {
+            const password =
+                document.getElementById(
+                    "registerPassword"
+                )?.value || "";
 
-            showRegistrationAlert(
-                "Please enter a valid name.",
-                "danger"
-            );
 
-            return;
+            const confirmPassword =
+                document.getElementById(
+                    "confirmPassword"
+                )?.value || "";
 
-        }
 
+            /* ==========================================
+               VALIDATION
+            ========================================== */
 
-        if (!/^[0-9]{10}$/.test(mobile)) {
+            if (name.length < 2) {
 
-            showRegistrationAlert(
-                "Please enter a valid 10 digit mobile number.",
-                "danger"
-            );
-
-            return;
-
-        }
-
-
-        if (
-            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-        ) {
-
-            showRegistrationAlert(
-                "Please enter a valid email address.",
-                "danger"
-            );
-
-            return;
-
-        }
-
-
-        if (businessLocation.length < 2) {
-
-            showRegistrationAlert(
-                "Please enter your business location.",
-                "danger"
-            );
-
-            return;
-
-        }
-
-
-        if (area.length < 2) {
-
-            showRegistrationAlert(
-                "Please enter your area.",
-                "danger"
-            );
-
-            return;
-
-        }
-
-
-        if (!/^[0-9]{6}$/.test(pincode)) {
-
-            showRegistrationAlert(
-                "Please enter a valid 6 digit pincode.",
-                "danger"
-            );
-
-            return;
-
-        }
-
-
-        if (password.length < 6) {
-
-            showRegistrationAlert(
-                "Password must contain at least 6 characters.",
-                "danger"
-            );
-
-            return;
-
-        }
-
-
-        if (password !== confirmPassword) {
-
-            showRegistrationAlert(
-                "Password and Confirm Password do not match.",
-                "danger"
-            );
-
-            return;
-
-        }
-
-
-
-        /* ==========================================
-           LOADING STATE
-        ========================================== */
-
-        setRegistrationLoading(true);
-
-
-
-        try {
-
-
-            /* ======================================
-               CREATE FIREBASE AUTH ACCOUNT
-            ====================================== */
-
-            const userCredential =
-                await createUserWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-
-
-            const user =
-                userCredential.user;
-
-
-            console.log(
-                "Firebase Auth User Created:",
-                user.uid
-            );
-
-
-            /* ======================================
-               SEND EMAIL VERIFICATION
-            ====================================== */
-
-            await sendEmailVerification(user);
-
-
-            console.log(
-                "Verification email sent."
-            );
-
-
-            registeredEmail =
-                email;
-
-
-            verificationEmail.innerText =
-                email;
-
-
-            /* ======================================
-               CLOSE REGISTER MODAL
-            ====================================== */
-
-            registerModal.hide();
-
-
-            /* ======================================
-               OPEN VERIFICATION MODAL
-            ====================================== */
-
-            setTimeout(() => {
-
-                verificationModal.show();
-
-            }, 400);
-
-
-        }
-
-        catch(error) {
-
-            console.error(
-                "Registration Error:",
-                error
-            );
-
-
-            showRegistrationAlert(
-                getFirebaseErrorMessage(error),
-                "danger"
-            );
-
-        }
-
-        finally {
-
-            setRegistrationLoading(false);
-
-        }
-
-    }
-);
-
-
-
-/* =====================================================
-   CHECK EMAIL VERIFICATION
-===================================================== */
-
-checkVerificationBtn.addEventListener(
-    "click",
-    async function() {
-
-        clearVerificationAlert();
-
-
-        try {
-
-
-            if (!auth.currentUser) {
-
-                showVerificationAlert(
-                    "Registration session expired. Please register again.",
+                showRegistrationAlert(
+                    "Please enter a valid name.",
                     "danger"
                 );
 
@@ -496,40 +349,11 @@ checkVerificationBtn.addEventListener(
             }
 
 
-            checkVerificationBtn.disabled =
-                true;
+            if (!/^[0-9]{10}$/.test(mobile)) {
 
-
-            checkVerificationBtn.innerHTML = `
-                <span class="spinner-border spinner-border-sm"></span>
-                Checking...
-            `;
-
-
-            /* ======================================
-               REFRESH USER DATA
-            ====================================== */
-
-            await reload(
-                auth.currentUser
-            );
-
-
-            const user =
-                auth.currentUser;
-
-
-            console.log(
-                "Email Verified:",
-                user.emailVerified
-            );
-
-
-            if (!user.emailVerified) {
-
-                showVerificationAlert(
-                    "Your email is not verified yet. Please open the verification email and click the verification link.",
-                    "warning"
+                showRegistrationAlert(
+                    "Please enter a valid 10 digit mobile number.",
+                    "danger"
                 );
 
                 return;
@@ -537,49 +361,119 @@ checkVerificationBtn.addEventListener(
             }
 
 
+            if (
+                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+            ) {
 
-            /* ======================================
-               SAVE USER PROFILE TO FIRESTORE
-            ====================================== */
+                showRegistrationAlert(
+                    "Please enter a valid email address.",
+                    "danger"
+                );
 
-            const name =
-                document.getElementById(
-                    "registerName"
-                ).value.trim();
+                return;
 
-
-            const mobile =
-                document.getElementById(
-                    "registerMobile"
-                ).value.trim();
+            }
 
 
-            const businessLocation =
-                document.getElementById(
-                    "businessLocation"
-                ).value.trim();
+            if (businessLocation.length < 2) {
+
+                showRegistrationAlert(
+                    "Please enter your business location.",
+                    "danger"
+                );
+
+                return;
+
+            }
 
 
-            const area =
-                document.getElementById(
-                    "businessArea"
-                ).value.trim();
+            if (area.length < 2) {
+
+                showRegistrationAlert(
+                    "Please enter your area.",
+                    "danger"
+                );
+
+                return;
+
+            }
 
 
-            const pincode =
-                document.getElementById(
-                    "businessPincode"
-                ).value.trim();
+            if (!/^[0-9]{6}$/.test(pincode)) {
+
+                showRegistrationAlert(
+                    "Please enter a valid 6 digit pincode.",
+                    "danger"
+                );
+
+                return;
+
+            }
 
 
+            if (password.length < 6) {
 
-            await setDoc(
-                doc(
-                    db,
-                    "users",
+                showRegistrationAlert(
+                    "Password must contain at least 6 characters.",
+                    "danger"
+                );
+
+                return;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showRegistrationAlert(
+                    "Password and Confirm Password do not match.",
+                    "danger"
+                );
+
+                return;
+
+            }
+
+
+            /* ==========================================
+               LOADING
+            ========================================== */
+
+            setRegistrationLoading(true);
+
+
+            try {
+
+                /* ======================================
+                   CREATE FIREBASE AUTH ACCOUNT
+                ====================================== */
+
+                const userCredential =
+                    await createUserWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                const user =
+                    userCredential.user;
+
+
+                console.log(
+                    "Firebase Auth User Created:",
                     user.uid
-                ),
-                {
+                );
+
+
+                /* ======================================
+                   SAVE TEMPORARY REGISTRATION DATA
+
+                   IMPORTANT:
+                   Password is NOT stored.
+                ====================================== */
+
+                pendingRegistration = {
 
                     uid: user.uid,
 
@@ -587,165 +481,575 @@ checkVerificationBtn.addEventListener(
 
                     mobile: mobile,
 
-                    email: user.email,
+                    email: email,
 
                     businessLocation:
                         businessLocation,
 
                     area: area,
 
-                    pincode: pincode,
+                    pincode: pincode
 
-                    createdAt:
-                        serverTimestamp(),
-
-                    updatedAt:
-                        serverTimestamp()
-
-                }
-            );
+                };
 
 
-            console.log(
-                "User profile saved to Firestore."
-            );
+                sessionStorage.setItem(
 
+                    PENDING_REGISTRATION_KEY,
 
-            showVerificationAlert(
-                "Email verified successfully! Your registration is complete.",
-                "success"
-            );
+                    JSON.stringify(
+                        pendingRegistration
+                    )
 
-
-            /* ======================================
-               WAIT THEN CLOSE
-            ====================================== */
-
-            setTimeout(() => {
-
-                verificationModal.hide();
-
-                alert(
-                    "Registration completed successfully. You can now login."
                 );
 
-            }, 1500);
 
+                registeredEmail =
+                    email;
+
+
+                /* ======================================
+                   SEND VERIFICATION EMAIL
+                ====================================== */
+
+                await sendEmailVerification(user);
+
+
+                console.log(
+                    "Verification email sent."
+                );
+
+
+                /* ======================================
+                   SHOW EMAIL IN VERIFICATION POPUP
+                ====================================== */
+
+                if (verificationEmail) {
+
+                    verificationEmail.innerText =
+                        email;
+
+                }
+
+
+                /* ======================================
+                   CLOSE REGISTER MODAL
+                ====================================== */
+
+                if (registerModal) {
+
+                    registerModal.hide();
+
+                }
+
+
+                /* ======================================
+                   OPEN VERIFICATION MODAL
+                ====================================== */
+
+                setTimeout(() => {
+
+                    if (verificationModal) {
+
+                        verificationModal.show();
+
+                    }
+
+                }, 400);
+
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Registration Error:",
+                    error
+                );
+
+
+                /*
+                   If account creation failed,
+                   remove temporary data.
+                */
+
+                pendingRegistration = null;
+
+                sessionStorage.removeItem(
+                    PENDING_REGISTRATION_KEY
+                );
+
+
+                showRegistrationAlert(
+                    getFirebaseErrorMessage(error),
+                    "danger"
+                );
+
+            }
+
+            finally {
+
+                setRegistrationLoading(false);
+
+            }
 
         }
+    );
 
-        catch(error) {
-
-            console.error(
-                "Verification Error:",
-                error
-            );
-
-
-            showVerificationAlert(
-                getFirebaseErrorMessage(error),
-                "danger"
-            );
-
-        }
-
-        finally {
-
-            checkVerificationBtn.disabled =
-                false;
-
-
-            checkVerificationBtn.innerHTML = `
-                <i class="bi bi-check-circle"></i>
-                Check Verification
-            `;
-
-        }
-
-    }
-);
-
+}
 
 
 /* =====================================================
-   RESEND VERIFICATION EMAIL
+   CHECK EMAIL VERIFICATION
 ===================================================== */
 
-resendVerificationBtn.addEventListener(
-    "click",
-    async function() {
+if (checkVerificationBtn) {
 
-        clearVerificationAlert();
-
-
-        try {
+    checkVerificationBtn.addEventListener(
+        "click",
+        async function() {
 
 
-            if (!auth.currentUser) {
+            /*
+               Prevent multiple clicks
+            */
 
-                showVerificationAlert(
-                    "Registration session expired. Please register again.",
-                    "danger"
-                );
+            if (
+                checkVerificationBtn.disabled
+            ) {
 
                 return;
 
             }
 
 
-            resendVerificationBtn.disabled =
-                true;
+            clearVerificationAlert();
 
 
-            resendVerificationBtn.innerHTML = `
-                <span class="spinner-border spinner-border-sm"></span>
-                Sending...
-            `;
+            try {
+
+                /* ======================================
+                   CHECK CURRENT USER
+                ====================================== */
+
+                if (!auth.currentUser) {
+
+                    showVerificationAlert(
+
+                        "Registration session expired. Please register again.",
+
+                        "danger"
+
+                    );
+
+                    return;
+
+                }
 
 
-            await sendEmailVerification(
-                auth.currentUser
-            );
+                checkVerificationBtn.disabled =
+                    true;
 
 
-            showVerificationAlert(
-                "A new verification email has been sent.",
-                "success"
-            );
+                checkVerificationBtn.innerHTML = `
+
+                    <span class="spinner-border spinner-border-sm"></span>
+
+                    Checking...
+
+                `;
+
+
+                /* ======================================
+                   RELOAD FIREBASE USER
+                ====================================== */
+
+                await reload(
+                    auth.currentUser
+                );
+
+
+                const user =
+                    auth.currentUser;
+
+
+                console.log(
+                    "Email Verified:",
+                    user.emailVerified
+                );
+
+
+                /* ======================================
+                   EMAIL NOT VERIFIED
+                ====================================== */
+
+                if (!user.emailVerified) {
+
+                    showVerificationAlert(
+
+                        "Your email is not verified yet. Please open the verification email and click the verification link.",
+
+                        "warning"
+
+                    );
+
+                    return;
+
+                }
+
+
+                /* ======================================
+                   GET PENDING REGISTRATION DATA
+                ====================================== */
+
+                let savedData =
+                    pendingRegistration;
+
+
+                /*
+                   If JavaScript variable is empty,
+                   try sessionStorage.
+                */
+
+                if (!savedData) {
+
+                    const storedData =
+                        sessionStorage.getItem(
+                            PENDING_REGISTRATION_KEY
+                        );
+
+
+                    if (storedData) {
+
+                        try {
+
+                            savedData =
+                                JSON.parse(
+                                    storedData
+                                );
+
+                        }
+
+                        catch(parseError) {
+
+                            console.error(
+                                "Pending registration data parse error:",
+                                parseError
+                            );
+
+                        }
+
+                    }
+
+                }
+
+
+                /* ======================================
+                   DATA SAFETY CHECK
+                ====================================== */
+
+                if (!savedData) {
+
+                    showVerificationAlert(
+
+                        "Email verified, but registration information could not be found. Please contact support before creating another account.",
+
+                        "danger"
+
+                    );
+
+                    return;
+
+                }
+
+
+                /* ======================================
+                   SAVE USER PROFILE TO FIRESTORE
+                ====================================== */
+
+                await setDoc(
+
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    ),
+
+                    {
+
+                        uid:
+                            user.uid,
+
+                        name:
+                            savedData.name,
+
+                        mobile:
+                            savedData.mobile,
+
+                        email:
+                            user.email,
+
+                        businessLocation:
+                            savedData.businessLocation,
+
+                        area:
+                            savedData.area,
+
+                        pincode:
+                            savedData.pincode,
+
+                        /*
+                           Future use
+                        */
+
+                        productCount:
+                            0,
+
+                        leadCount:
+                            0,
+
+                        role:
+                            "businessOwner",
+
+                        createdAt:
+                            serverTimestamp(),
+
+                        updatedAt:
+                            serverTimestamp()
+
+                    }
+
+                );
+
+
+                console.log(
+                    "User profile saved to Firestore."
+                );
+
+
+                /* ======================================
+                   REGISTRATION COMPLETE
+                ====================================== */
+
+                showVerificationAlert(
+
+                    "Email verified successfully! Your registration is complete.",
+
+                    "success"
+
+                );
+
+
+                /*
+                   Remove temporary registration data
+                   only AFTER Firestore save succeeds.
+                */
+
+                pendingRegistration =
+                    null;
+
+
+                sessionStorage.removeItem(
+                    PENDING_REGISTRATION_KEY
+                );
+
+
+                /* ======================================
+                   CLOSE VERIFICATION
+                   AND OPEN LOGIN
+                ====================================== */
+
+                setTimeout(() => {
+
+
+                    if (verificationModal) {
+
+                        verificationModal.hide();
+
+                    }
+
+
+                    /*
+                       Open Login Modal if available
+                    */
+
+                    setTimeout(() => {
+
+                        if (loginModal) {
+
+                            loginModal.show();
+
+                        }
+                        else {
+
+                            alert(
+
+                                "Registration completed successfully. You can now login."
+
+                            );
+
+                        }
+
+                    }, 500);
+
+
+                }, 1200);
+
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Verification Error:",
+                    error
+                );
+
+
+                showVerificationAlert(
+                    getFirebaseErrorMessage(error),
+                    "danger"
+                );
+
+            }
+
+            finally {
+
+                checkVerificationBtn.disabled =
+                    false;
+
+
+                checkVerificationBtn.innerHTML = `
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Check Verification
+
+                `;
+
+            }
 
         }
+    );
 
-        catch(error) {
-
-            console.error(
-                "Resend Error:",
-                error
-            );
+}
 
 
-            showVerificationAlert(
-                getFirebaseErrorMessage(error),
-                "danger"
-            );
+/* =====================================================
+   RESEND VERIFICATION EMAIL
+===================================================== */
+
+if (resendVerificationBtn) {
+
+    resendVerificationBtn.addEventListener(
+        "click",
+        async function() {
+
+
+            if (
+                resendVerificationBtn.disabled
+            ) {
+
+                return;
+
+            }
+
+
+            clearVerificationAlert();
+
+
+            try {
+
+                /* ======================================
+                   CHECK USER
+                ====================================== */
+
+                if (!auth.currentUser) {
+
+                    showVerificationAlert(
+
+                        "Registration session expired. Please register again.",
+
+                        "danger"
+
+                    );
+
+                    return;
+
+                }
+
+
+                resendVerificationBtn.disabled =
+                    true;
+
+
+                resendVerificationBtn.innerHTML = `
+
+                    <span class="spinner-border spinner-border-sm"></span>
+
+                    Sending...
+
+                `;
+
+
+                /* ======================================
+                   SEND AGAIN
+                ====================================== */
+
+                await sendEmailVerification(
+                    auth.currentUser
+                );
+
+
+                showVerificationAlert(
+
+                    "A new verification email has been sent. Please check your Inbox and Spam folder.",
+
+                    "success"
+
+                );
+
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Resend Error:",
+                    error
+                );
+
+
+                showVerificationAlert(
+
+                    getFirebaseErrorMessage(error),
+
+                    "danger"
+
+                );
+
+            }
+
+            finally {
+
+                resendVerificationBtn.disabled =
+                    false;
+
+
+                resendVerificationBtn.innerHTML = `
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                    Resend Email
+
+                `;
+
+            }
 
         }
+    );
 
-        finally {
-
-            resendVerificationBtn.disabled =
-                false;
-
-
-            resendVerificationBtn.innerHTML = `
-                <i class="bi bi-arrow-repeat"></i>
-                Resend Email
-            `;
-
-        }
-
-    }
-);
-
+}
 
 
 /* =====================================================
@@ -756,32 +1060,56 @@ function setRegistrationLoading(
     loading
 ) {
 
+    if (!registerSubmitBtn) {
+        return;
+    }
+
+
     registerSubmitBtn.disabled =
         loading;
 
 
     if (loading) {
 
-        registerBtnText.innerText =
-            "Creating Account...";
+        if (registerBtnText) {
 
-        registerSpinner.classList.remove(
-            "d-none"
-        );
+            registerBtnText.innerText =
+                "Creating Account...";
 
-    } else {
+        }
 
-        registerBtnText.innerText =
-            "Create Account";
 
-        registerSpinner.classList.add(
-            "d-none"
-        );
+        if (registerSpinner) {
+
+            registerSpinner.classList.remove(
+                "d-none"
+            );
+
+        }
+
+    }
+
+    else {
+
+        if (registerBtnText) {
+
+            registerBtnText.innerText =
+                "Create Account";
+
+        }
+
+
+        if (registerSpinner) {
+
+            registerSpinner.classList.add(
+                "d-none"
+            );
+
+        }
 
     }
 
 }
-
 
 
 /* =====================================================
@@ -793,11 +1121,18 @@ function showRegistrationAlert(
     type
 ) {
 
+    if (!registrationAlert) {
+        return;
+    }
+
+
     registrationAlert.className =
         `alert alert-${type}`;
 
+
     registrationAlert.innerText =
         message;
+
 
     registrationAlert.classList.remove(
         "d-none"
@@ -808,13 +1143,19 @@ function showRegistrationAlert(
 
 function clearRegistrationAlert() {
 
+    if (!registrationAlert) {
+        return;
+    }
+
+
     registrationAlert.className =
         "alert d-none";
 
-    registrationAlert.innerText = "";
+
+    registrationAlert.innerText =
+        "";
 
 }
-
 
 
 /* =====================================================
@@ -826,11 +1167,18 @@ function showVerificationAlert(
     type
 ) {
 
+    if (!verificationAlert) {
+        return;
+    }
+
+
     verificationAlert.className =
         `alert alert-${type}`;
 
+
     verificationAlert.innerText =
         message;
+
 
     verificationAlert.classList.remove(
         "d-none"
@@ -841,13 +1189,19 @@ function showVerificationAlert(
 
 function clearVerificationAlert() {
 
+    if (!verificationAlert) {
+        return;
+    }
+
+
     verificationAlert.className =
         "alert d-none";
 
-    verificationAlert.innerText = "";
+
+    verificationAlert.innerText =
+        "";
 
 }
-
 
 
 /* =====================================================
@@ -856,12 +1210,111 @@ function clearVerificationAlert() {
 
 function clearRegistrationForm() {
 
+    if (!registrationForm) {
+        return;
+    }
+
+
     registrationForm.reset();
+
 
     clearRegistrationAlert();
 
 }
 
+
+/* =====================================================
+   RESTORE PENDING REGISTRATION
+===================================================== */
+
+function restorePendingRegistration() {
+
+    /*
+       Check sessionStorage
+    */
+
+    const storedData =
+        sessionStorage.getItem(
+            PENDING_REGISTRATION_KEY
+        );
+
+
+    if (!storedData) {
+
+        return;
+
+    }
+
+
+    try {
+
+        pendingRegistration =
+            JSON.parse(
+                storedData
+            );
+
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Could not restore pending registration:",
+            error
+        );
+
+
+        sessionStorage.removeItem(
+            PENDING_REGISTRATION_KEY
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       If Firebase still has the same user,
+       restore verification screen.
+    */
+
+    if (
+        auth.currentUser &&
+        !auth.currentUser.emailVerified &&
+        pendingRegistration
+    ) {
+
+        registeredEmail =
+            pendingRegistration.email;
+
+
+        if (verificationEmail) {
+
+            verificationEmail.innerText =
+                pendingRegistration.email;
+
+        }
+
+
+        /*
+           Automatically show verification modal
+           after page refresh.
+        */
+
+        setTimeout(() => {
+
+            if (verificationModal) {
+
+                verificationModal.show();
+
+            }
+
+        }, 700);
+
+    }
+
+}
 
 
 /* =====================================================
@@ -877,7 +1330,7 @@ function getFirebaseErrorMessage(
 
         case "auth/email-already-in-use":
 
-            return "This email is already registered. Please use another email or login.";
+            return "This email is already registered. Please login instead of creating another account.";
 
 
         case "auth/invalid-email":
@@ -897,7 +1350,7 @@ function getFirebaseErrorMessage(
 
         case "auth/too-many-requests":
 
-            return "Too many attempts. Please wait for some time and try again.";
+            return "Too many attempts. Please wait for some time before trying again.";
 
 
         case "auth/operation-not-allowed":
@@ -910,7 +1363,17 @@ function getFirebaseErrorMessage(
             return "This account has been disabled.";
 
 
+        case "auth/requires-recent-login":
+
+            return "Please login again and try this operation.";
+
+
         default:
+
+            console.error(
+                "Unknown Firebase Error:",
+                error
+            );
 
             return "Something went wrong. Please try again.";
 
@@ -919,21 +1382,29 @@ function getFirebaseErrorMessage(
 }
 
 
-
 /* =====================================================
    INITIAL TEST
 ===================================================== */
 
 console.log(
-    "Part 3 Registration System Loaded"
+    "Part 3 Final Registration System Loaded"
 );
+
 
 console.log(
     "Firebase Authentication:",
     auth
 );
 
+
 console.log(
     "Firestore:",
     db
 );
+
+
+/* =====================================================
+   RESTORE PENDING VERIFICATION
+===================================================== */
+
+restorePendingRegistration();
