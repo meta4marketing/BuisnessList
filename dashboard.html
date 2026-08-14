@@ -1684,124 +1684,13 @@
 
 <!-- =================================================
      DASHBOARD JS
-     
      Firebase/product functionality will be
      added in the next part.
 ================================================= -->
 
-<script type="module">
-
-    console.log(
-        "Dashboard UI Loaded"
-    );
-
-
-    /* =============================================
-       IMAGE PREVIEW
-    ============================================= */
-
-    const productImage =
-        document.getElementById(
-            "productImage"
-        );
-
-
-    const productImagePreview =
-        document.getElementById(
-            "productImagePreview"
-        );
-
-
-    if (productImage) {
-
-        productImage.addEventListener(
-            "change",
-            function() {
-
-                const file =
-                    this.files[0];
-
-
-                if (!file) {
-
-                    productImagePreview.innerHTML = `
-
-                        <div class="image-placeholder">
-
-                            <i class="bi bi-image"></i>
-
-                            <div>
-                                Select product image
-                            </div>
-
-                        </div>
-
-                    `;
-
-                    return;
-
-                }
-
-
-                const reader =
-                    new FileReader();
-
-
-                reader.onload =
-                    function(event) {
-
-                        productImagePreview.innerHTML = `
-
-                            <img
-                                src="${event.target.result}"
-                                alt="Product Preview"
-                            >
-
-                        `;
-
-                    };
-
-
-                reader.readAsDataURL(file);
-
-            }
-        );
-
-    }
-
-
-    /* =============================================
-       DASHBOARD LOGOUT BUTTON
-       
-       Actual Firebase logout will be connected
-       in dashboard.js.
-    ============================================= */
-
-    const dashboardLogoutBtn =
-        document.getElementById(
-            "dashboardLogoutBtn"
-        );
-
-
-    if (dashboardLogoutBtn) {
-
-        dashboardLogoutBtn.addEventListener(
-            "click",
-            function() {
-
-                console.log(
-                    "Dashboard logout clicked"
-                );
-
-            }
-        );
-
-    }
-
-
-</script>
-
-
+<script
+    type="module"
+    src="dashboard.js"
+></script>
 </body>
-
 </html>
