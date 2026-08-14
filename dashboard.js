@@ -253,10 +253,16 @@ setProfileValue(
         );
 
 
-        setProfileValue(
-            dashboardUserLocation,
-            userData.location
-        );
+     const businessLocation =
+    userData.businessLocation ||
+    userData.location ||
+    userData.business_location ||
+    "";
+
+setProfileValue(
+    dashboardUserLocation,
+    businessLocation
+);
 
 
         setProfileValue(
