@@ -850,26 +850,48 @@ if (addProductForm) {
                     cloudinaryResponse.status
                 );
 
+if (!cloudinaryResponse.ok) {
 
-                if (
-                    !cloudinaryResponse.ok
-                ) {
+    const errorText =
+        await cloudinaryResponse.text();
 
-                    const errorText =
-                        await cloudinaryResponse.text();
+    console.error(
+        "========== CLOUDINARY ERROR =========="
+    );
 
+    console.error(
+        "Status:",
+        cloudinaryResponse.status
+    );
 
-                    console.error(
-                        "Cloudinary Error:",
-                        errorText
-                    );
+    console.error(
+        "Response:",
+        errorText
+    );
 
+    console.error(
+        "Cloud Name:",
+        CLOUDINARY_CLOUD_NAME
+    );
 
-                    throw new Error(
-                        "Cloudinary image upload failed."
-                    );
+    console.error(
+        "Upload Preset:",
+        CLOUDINARY_UPLOAD_PRESET
+    );
 
-                }
+    console.error(
+        "======================================"
+    );
+
+    alert(
+        "Cloudinary Error:\n\n" +
+        errorText
+    );
+
+    throw new Error(
+        "Cloudinary image upload failed."
+    );
+}
 
 
                 /* ======================================
