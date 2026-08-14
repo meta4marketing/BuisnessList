@@ -33,12 +33,8 @@ import {
 /* =====================================================
    CLOUDINARY CONFIG
 ===================================================== */
-
-const CLOUDINARY_CLOUD_NAME =
-    "y6kr5fn";
-
-const CLOUDINARY_UPLOAD_PRESET =
-    "businessList";
+const CLOUDINARY_CLOUD_NAME = "y6kr5fnv";
+const CLOUDINARY_UPLOAD_PRESET = "businessList";
 
 
 /* =====================================================
