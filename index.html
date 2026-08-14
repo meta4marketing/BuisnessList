@@ -1402,7 +1402,149 @@
 </div>
 
 
+<!-- =====================================================
+     LOGIN MODAL
+===================================================== -->
 
+<div
+    class="modal fade"
+    id="loginModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <!-- Header -->
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+
+                    Login
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+
+            <!-- Body -->
+
+            <div class="modal-body">
+
+                <!-- Login Alert -->
+
+                <div
+                    id="loginAlert"
+                    class="alert d-none"
+                    role="alert"
+                ></div>
+
+
+                <form id="loginForm">
+
+                    <!-- Email -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="loginEmail"
+                            class="form-label"
+                        >
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="loginEmail"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Password -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="loginPassword"
+                            class="form-label"
+                        >
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="loginPassword"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Forgot Password -->
+
+                    <div class="text-end mb-3">
+
+                        <button
+                            type="button"
+                            id="forgotPasswordBtn"
+                            class="btn btn-link btn-sm p-0"
+                        >
+                            Forgot Password?
+                        </button>
+
+                    </div>
+
+
+                    <!-- Login Button -->
+
+                    <button
+                        type="submit"
+                        id="loginSubmitBtn"
+                        class="btn btn-primary w-100"
+                    >
+
+                        <span id="loginBtnText">
+                            Login
+                        </span>
+
+                        <span
+                            id="loginSpinner"
+                            class="spinner-border spinner-border-sm d-none"
+                            role="status"
+                            aria-hidden="true"
+                        ></span>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <!-- ==================================================
      BOOTSTRAP JS
 ================================================== -->
