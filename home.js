@@ -60,7 +60,7 @@ if (detailsModalElement) {
    LOAD PRODUCTS
 ===================================================== */
 
-async function loadHomeProducts(const products = [];) {
+async function loadHomeProducts() {
 
     if (!productsContainer) {
 
@@ -74,7 +74,7 @@ async function loadHomeProducts(const products = [];) {
         console.log(
             "Loading public products..."
         );
-
+allHomeProducts = products;
 
         const productsRef =
             collection(
@@ -865,7 +865,7 @@ function escapeHTML(
    START
 ===================================================== */
 
-loadHomeProducts();
+loadHomeProducts(const products = []);
 
 
 console.log(
